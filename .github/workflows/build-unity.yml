@@ -1,0 +1,39 @@
+name: build-unity
+
+# Reference pipeline, never run. It needs a Unity license stored as repository secrets
+# (UNITY_LICENSE, UNITY_EMAIL, UNITY_PASSWORD; see https://game.ci/docs/github/activation),
+# so it only runs when started by hand.
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Build target
+        type: choice
+        options: [WebGL, StandaloneWindows64]
+        default: WebGL
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: Library
+          key: Library-${{ inputs.target }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-${{ inputs.target }}-
+      - uses: game-ci/unity-builder@v6
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ inputs.target }}
+          buildMethod: ${{ inputs.target == 'WebGL' && 'BrickBurst.Editor.BuildScript.BuildWebGL' || 'BrickBurst.Editor.BuildScript.BuildWindows' }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: brick-burst-${{ inputs.target }}
+          path: build

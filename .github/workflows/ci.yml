@@ -1,0 +1,21 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  logic-tests:
+    # The game rules (Assets/Scripts/Core) have no Unity dependency, so they build and test without an editor.
+    # This does NOT compile the Unity-facing scripts; see README ("What is verified").
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+      - run: dotnet run --project Tests/LogicTests -c Release
