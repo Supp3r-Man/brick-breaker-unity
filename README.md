@@ -9,7 +9,7 @@
 > - I broke the rules on purpose **57 ways** (collision maths, bounce angle, combo, speed cap, power-up timers, lives, level bonus, ...). The tests caught **56**. The one survivor changes which of two bricks is processed first when two hits happen at exactly the same instant; that is an equivalent mutant (for axis-aligned hits the two reflections commute, so the final state is identical), not a test gap I could close.
 > - Two scripted players run through the real simulation: one that tracks the ball cleared level 1 in 45.7 simulated seconds without losing a life (and level 2 in 137.3 s); one that never moves the paddle lost the game in 7.0 s. During both, a watcher checked that no ball ever moved further in a step than its speed allows, never sank into a brick, and never left the arena.
 > - The Unity-facing scripts compile against **hand-written stubs** of the Unity API, under each input-handling configuration. That catches typos and type mistakes in my code. It does **not** check that I used the real Unity API correctly, and it says nothing about how the game looks, sounds or feels.
-> - Not checked at all: `Assets/Editor/BuildScript.cs`, the `build-unity` workflow (needs a Unity license, never run), the pinned editor version `6000.0.23f1` and the `com.unity.inputsystem` 1.11.2 package version, and the CI workflow in this repo had not run when this README was written.
+> - Not checked at all: `Assets/Editor/BuildScript.cs`, the `build-unity` workflow (needs a Unity license, never run), the pinned editor version `6000.0.23f1` and the `com.unity.inputsystem` 1.11.2 package version. (The `ci.yml` logic-test job did run green on GitHub after the first push, under .NET 8; it covers `Core` only.)
 
 ## Play it
 
